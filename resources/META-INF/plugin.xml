@@ -1,0 +1,41 @@
+<idea-plugin>
+    <id>com.leon.plugin.arouter</id>
+    <name>ArouterHelperKotlion</name>
+    <version>1.0.0</version>
+    <vendor email="luchaokj686@126.com"></vendor>
+
+    <description><![CDATA[
+    Support to track navigation target for Android Arouter.  This Plugin is only for IntelliJ IDEA And Android studio<br>
+  <br>
+     Matching correlation: <br>
+     ARouter.getInstance().build("/xx/xxx").navigation(context) <br> <br>
+     @Route(path = "/xx/xxx")<br>
+     public class YourActivity extend Activity {} <br> <br>
+     @Route(path = "/yourservicegroupname/hello", name = "test service")<br>
+     public class HelloServiceImpl implements HelloService {} <br> <br>
+
+     @Autowired(name = "/yourservicegroupname/hello")<br>
+    HelloService helloService2;
+
+    ]]></description>
+
+    <change-notes><![CDATA[
+      support kotlin<br>
+    ]]>
+    </change-notes>
+
+    <idea-version since-build="173.0"/>
+
+    <depends optional="true">org.jetbrains.kotlin</depends>
+    <depends>com.intellij.modules.lang</depends>
+
+    <actions>
+
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <codeInsight.lineMarkerProvider language="kotlin"
+                                        implementationClass="com.leon.plugin.KtNavigationLineMarker"/>
+
+    </extensions>
+</idea-plugin>
