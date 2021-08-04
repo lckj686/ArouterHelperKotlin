@@ -7,4 +7,5 @@
 ![](https://raw.githubusercontent.com/lckj686/ArouterHelperKotlin/master/Screenshot/3.png)
 ![](https://raw.githubusercontent.com/lckj686/ArouterHelperKotlin/master/Screenshot/4.png)
 ![](https://raw.githubusercontent.com/lckj686/ArouterHelperKotlin/master/Screenshot/5.png)
+<img src="https://github.com/lckj686/ArouterHelperKotlin/blob/master/Screenshot/5.png?raw=true" width="900">
 
