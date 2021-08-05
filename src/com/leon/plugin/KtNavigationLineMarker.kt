@@ -42,7 +42,7 @@ class KtNavigationLineMarker : LineMarkerProvider {
         projectPath = project.basePath
         filePath = elements[0].containingFile.viewProvider.virtualFile.canonicalPath
         elements.forEachIndexed { index, psiElement ->
-            println("tag1**${psiElement.javaClass.name}  ${psiElement.text}")
+//            println("tag1**${psiElement.javaClass.name}  ${psiElement.text}")
             var target: TargetContent? = null
 
             //目标注解
@@ -55,7 +55,7 @@ class KtNavigationLineMarker : LineMarkerProvider {
             target?.let {
                 val reva = findProperties(project, target, PsiElement::class.java, listOf("Route"))
                 if (reva.isNotEmpty()) {
-                    println("111*************$target")
+//                    println("111*************$target")
                     val builder = NavigationGutterIconBuilder.create(getIcon(target))
                     builder.setAlignment(GutterIconRenderer.Alignment.CENTER)
                     builder.setTargets(reva)
@@ -151,7 +151,7 @@ class KtNavigationLineMarker : LineMarkerProvider {
         var result: MutableList<T> = mutableListOf()
         val scopes = GlobalSearchScope.projectScope(project)
         val virtualFiles = FilenameIndex.getAllFilesByExt(project, "kt", scopes)
-        println("virtualFiles-size= ${virtualFiles.size}")
+//        println("virtualFiles-size= ${virtualFiles.size}")
         if (virtualFiles.isNullOrEmpty()) {
             return listOf()
         }
@@ -172,17 +172,17 @@ class KtNavigationLineMarker : LineMarkerProvider {
                 list.forEach {
                     if (it.javaClass.simpleName == "KtAnnotationEntry" && it.text.contains(target.content
                                     ?: "") && it.text.contains("Route")) {
-                        println("++property=${it.javaClass.simpleName} ${it.text} ")
+//                        println("++property=${it.javaClass.simpleName} ${it.text} ")
                         result.add(it)
                     }
                 }
             } else if (target.content?.startsWith("\"") == true) {
                 list.forEachIndexed { index, property ->
-                    println("2级查找=${property.javaClass.simpleName}  ${property.text}")
+//                    println("2级查找=${property.javaClass.simpleName}  ${property.text}")
                     //KtDotQualifiedExpression
                     if (target.content?.startsWith("\"") == true && property.javaClass.simpleName == "KtStringTemplateExpression") {
                         if (property.text == target.content) {
-                            println("--property=${property.javaClass.simpleName} ${property.text} ")
+//                            println("--property=${property.javaClass.simpleName} ${property.text} ")
                             result.add(property)
                             //return@forEachIndexed
                         }
@@ -190,10 +190,10 @@ class KtNavigationLineMarker : LineMarkerProvider {
                 }
             } else {
                 list.forEachIndexed { index, property ->
-                    println("2级查找=${property.javaClass.simpleName}  ${property.text}")
+//                    println("2级查找=${property.javaClass.simpleName}  ${property.text}")
                     if (property.javaClass.simpleName == "KtDotQualifiedExpression") {
                         if (property.text == target.content) {
-                            println("--property=${property.javaClass.simpleName} ${property.text} ")
+//                            println("--property=${property.javaClass.simpleName} ${property.text} ")
                             result.add(property)
                         }
                     }
@@ -240,7 +240,7 @@ class KtNavigationLineMarker : LineMarkerProvider {
             // 不包含前后的两个字符
             return matcher.group(1)
         } else {
-            println(" 没有匹配到内容....")
+//            println(" 没有匹配到内容....")
             return "";
         }
     }

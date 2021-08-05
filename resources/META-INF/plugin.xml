@@ -1,23 +1,47 @@
 <idea-plugin>
     <id>com.leon.plugin.arouter</id>
     <name>ArouterHelperKotlion</name>
-    <version>1.0.0</version>
-    <vendor email="luchaokj686@126.com"></vendor>
+    <version>1.0.2</version>
+    <vendor email="luchaokj686@126.com">lckj686</vendor>
+
 
     <description><![CDATA[
+  Support to track navigation target for alibaba Android Arouter.</br></br>
 
-<!doctype html>
+        <!doctype html>
 <html>
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width initial-scale=1'>
     <title>README_EN</title></head>
 <body>
+</br>
+<h2>Usage</h2>
 <p><a href='https://github.com/lckj686/ArouterHelperKotlin'>Github</a> | <a
         href='https://github.com/lckj686/ArouterHelperKotlin/issues'>Issues</a></p>
-<p>Support to track navigation target for Android Arouter. Currently, only Kotlin is supported</p>
-<p>This Plugin is only for IntelliJ IDEA And Android Studio</p>
+
+<p>This Plugin is only for IntelliJ IDEA And Android Studio. Currently, only Kotlin is supported</p>
 <p> which is base on ArouterHelperKotlin and more flexible and convenient. Welcome to issue and PR.</p>
+<p>Matching correlation: </p>
+<pre>
+    ARouter.getInstance().build("/xx/xxx").navigation(context)
+    ⇅
+    @Route(path = "/xx/xxx")
+    public class YourActivity extend Activity {}
+
+    ARouter.getInstance().build("/xx/xxx").navigation(context)
+    ⇅
+    @Route(path = "/yourservicegroupname/hello", name = "test service")
+    public class HelloServiceImpl implements HelloService {}
+
+    @Autowired(name = "/yourservicegroupname/hello")
+    HelloService helloService2;
+    ⇅
+    @Route(path = "/yourservicegroupname/hello", name = "test service")
+    public class HelloServiceImpl implements HelloService {}
+</pre>
+
+
 <h2>Install</h2>
 <ul>
     <li><p>Using IDE built-in plugin system on Windows:</p>
@@ -43,42 +67,7 @@
     </li>
 </ul>
 <p>Restart IDE.</p>
-<h2>Usage</h2>
 
-<p>Matching correlation: </p>
-<pre>
-    ARouter.getInstance().build("/xx/xxx").navigation(context)
-    ⇅
-    @Route(path = "/xx/xxx")
-    public class YourActivity extend Activity {}
-
-    ARouter.getInstance().build("/xx/xxx").navigation(context)
-    ⇅
-    @Route(path = "/yourservicegroupname/hello", name = "test service")
-    public class HelloServiceImpl implements HelloService {}
-
-    @Autowired(name = "/yourservicegroupname/hello")
-    HelloService helloService2;
-    ⇅
-    @Route(path = "/yourservicegroupname/hello", name = "test service")
-    public class HelloServiceImpl implements HelloService {}
-</pre>
-
-<h3>show view match navigation</h3>
-<ul>
-    <li>ARouter.getInstance().build("/xx/xxx").navigation(context) ⇋ @Route(path = "/xx/xxx")</li>
-    <p><img src="https://raw.githubusercontent.com/lckj686/ArouterHelperKotlin/master/Screenshot/1.png" width="900"></p>
-    <p><img src="https://github.com/lckj686/ArouterHelperKotlin/blob/master/Screenshot/2.png?raw=true" width="900"></p>
-
-    <li>ARouter.getInstance().build("/xx/xxx").navigation(context) ⇋ @Autowired(name = "/yourservicegroupname/hello")
-    </li>
-    <p><img src="https://github.com/lckj686/ArouterHelperKotlin/blob/master/Screenshot/3.png?raw=true" width="900"></p>
-
-    <li>navigation to more
-    </li>
-    <p><img src="https://github.com/lckj686/ArouterHelperKotlin/blob/master/Screenshot/4.png?raw=true" width="900"></p>
-    <p><img src="https://github.com/lckj686/ArouterHelperKotlin/blob/master/Screenshot/5.png?raw=true" width="900"></p>
-</ul>
 </body>
 </html>
 
