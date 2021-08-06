@@ -1,3 +1,6 @@
+插件位置：
+[https://plugins.jetbrains.com/plugin/17334-arouterhelperkotlion?breakdown=by-time&measure=downloads-unique&period=day&update=131100](https://plugins.jetbrains.com/plugin/17334-arouterhelperkotlion?breakdown=by-time&measure=downloads-unique&period=day&update=131100)
+
 ### 一、概述
 代码组件化，就会牵扯到代码隔离。 跨组件方案在充分使用代码隔离后都会出现一个问题。业务组件间需要相互调用，但由于使用了跨组件方案处理，代码隔离后 相关联的代码就失去了自动跳转的联系。阅读代码，和操作代码带来了一定程度的不便。
 
