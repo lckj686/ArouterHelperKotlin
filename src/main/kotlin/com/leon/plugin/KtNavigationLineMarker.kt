@@ -3,7 +3,7 @@ package com.leon.plugin
 import com.intellij.codeInsight.daemon.LineMarkerInfo
 import com.intellij.codeInsight.daemon.LineMarkerProvider
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder
-import com.intellij.formatting.blocks.prev
+//import com.intellij.formatting.blocks.prev
 import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.IconLoader
@@ -33,9 +33,12 @@ class KtNavigationLineMarker : LineMarkerProvider {
     private var projectPath: String? = ""
     private var time: Long = 0
 
-    override fun collectSlowLineMarkers(elements: List<PsiElement>, result: MutableCollection<LineMarkerInfo<PsiElement>>) {
+    override fun collectSlowLineMarkers(
+        elements: MutableList<out PsiElement>,
+        result: MutableCollection<in LineMarkerInfo<*>>
+    ) {
         if (elements.isNullOrEmpty()) {
-            result
+            return
         }
         time = System.currentTimeMillis()
         val project = elements[0].project
@@ -55,7 +58,7 @@ class KtNavigationLineMarker : LineMarkerProvider {
             target?.let {
                 val reva = findProperties(project, target, PsiElement::class.java, listOf("Route"))
                 if (reva.isNotEmpty()) {
-//                    println("111*************$target")
+//                    println("tag2*************$target $reva")
                     val builder = NavigationGutterIconBuilder.create(getIcon(target))
                     builder.setAlignment(GutterIconRenderer.Alignment.CENTER)
                     builder.setTargets(reva)
@@ -64,21 +67,23 @@ class KtNavigationLineMarker : LineMarkerProvider {
                     return@forEachIndexed
                 } else {
                     val builder = NavigationGutterIconBuilder.create(getIcon(target))
-                            .setAlignment(GutterIconRenderer.Alignment.CENTER)
-                            .setTargets(listOf())
-                            .setTooltipTitle("Navigation to none")
+                        .setAlignment(GutterIconRenderer.Alignment.CENTER)
+                        .setTargets(listOf())
+                        .setTooltipTitle("Navigation to none")
                     result.add(builder.createLineMarkerInfo(psiElement))
                 }
                 logTime("3")
                 return
             }
         }
+
     }
 
     private fun getAnnotationContent2(psiElement: PsiElement): TargetContent? {
         if (psiElement.javaClass.name == "org.jetbrains.kotlin.psi.KtDotQualifiedExpression") {
             if (psiElement.text.contains("ARouter.getInstance()") && psiElement.text.contains("navigation")) {
-                var anoContent = matchBuild(psiElement.text)
+                val anoContent = matchBuild(psiElement.text)
+//                println("tag3*************$anoContent")
                 return TargetContent().apply {
                     this.type = 2
                     this.content = anoContent
@@ -92,18 +97,22 @@ class KtNavigationLineMarker : LineMarkerProvider {
      * 找到 注解
      */
     private fun getAnnotationContent(element: PsiElement, targetAno: List<String>): TargetContent? {
+
         if (element.text == "(") {
+//            println("tag5----text = $element")
             if (element is LeafPsiElement) {
-                val pre = (element as LeafPsiElement).treeParent.prev()
+                val pre = (element as LeafPsiElement).treeParent.treePrev
+
                 if (pre is CompositeElement) {
                     val text = recursionCompositeElementText(pre)
-                    // println("----text = $text")
+//                    println("tag4----text = $text")
                     //确实是注解
                     if (targetAno.contains(text)) {
                         //接着去找注解的内容
                         val next = element.treeNext
                         if (next is CompositeElement) {
                             val ano = recursionCompositeElement(next)
+
                             //  println("----ano = $ano")
                             return TargetContent().apply {
                                 this.content = ano
@@ -147,7 +156,12 @@ class KtNavigationLineMarker : LineMarkerProvider {
         }
     }
 
-    private fun <T : PsiElement> findProperties(project: Project, target: TargetContent, clazz: Class<T>, key: List<String>): List<T> {
+    private fun <T : PsiElement> findProperties(
+        project: Project,
+        target: TargetContent,
+        clazz: Class<T>,
+        key: List<String>
+    ): List<T> {
         var result: MutableList<T> = mutableListOf()
         val scopes = GlobalSearchScope.projectScope(project)
         val virtualFiles = FilenameIndex.getAllFilesByExt(project, "kt", scopes)
@@ -170,8 +184,11 @@ class KtNavigationLineMarker : LineMarkerProvider {
             //src 是导航器->来查找
             if (target.type == 2) {
                 list.forEach {
-                    if (it.javaClass.simpleName == "KtAnnotationEntry" && it.text.contains(target.content
-                                    ?: "") && it.text.contains("Route")) {
+                    if (it.javaClass.simpleName == "KtAnnotationEntry" && it.text.contains(
+                            target.content
+                                ?: ""
+                        ) && it.text.contains("Route")
+                    ) {
 //                        println("++property=${it.javaClass.simpleName} ${it.text} ")
                         result.add(it)
                     }
@@ -203,15 +220,15 @@ class KtNavigationLineMarker : LineMarkerProvider {
         return result
     }
 
-    fun getIconGoto(): Icon {
+    private fun getIconGoto(): Icon {
         return IconLoader.getIcon("/icon/icon_direct_to.png")
     }
 
-    fun getIconFrom(): Icon {
+    private fun getIconFrom(): Icon {
         return IconLoader.getIcon("/icon/icon_direct_from.png")
     }
 
-    fun getIcon(target: TargetContent): Icon {
+    private fun getIcon(target: TargetContent): Icon {
         if (target.type == 2) {
             return getIconGoto()
         }
@@ -222,12 +239,12 @@ class KtNavigationLineMarker : LineMarkerProvider {
         return IconLoader.getIcon("/icon/icon_firect_warn.png")
     }
 
-    fun logTime(tag: String = "") {
-        println("$tag timeOff = ${System.currentTimeMillis() - time}")
+    private fun logTime(tag: String = "") {
+//        println("$tag timeOff = ${System.currentTimeMillis() - time}")
     }
 
 
-    fun matchBuild(srcStr: String): String {
+    private fun matchBuild(srcStr: String): String {
 
         // 匹配规则
         val reg = "build\\((.*?)\\)"
@@ -246,11 +263,11 @@ class KtNavigationLineMarker : LineMarkerProvider {
     }
 
     data class TargetContent(
-            var content: String? = "",
-            /**
-             * 类文件头部的注解是1
-             * 导航器的是2
-             */
-            var type: Int = 0
+        var content: String? = "",
+        /**
+         * 类文件头部的注解是1
+         * 导航器的是2
+         */
+        var type: Int = 0
     )
 }
